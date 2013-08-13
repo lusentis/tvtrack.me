@@ -1,0 +1,55 @@
+!!!
+html(lang='en')
+  head
+    title TVTrack.me
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css')
+
+  body
+    
+    .container
+      div(style='height: 40px; min-height: 40px;')
+        
+      .page-header
+        h1 Your TV-Show Tracker
+      
+      p.lead.
+        TVTrack.me is a <a href="#why">simple</a> tracker for the TV Shows you are watching.
+      
+      .signin.row
+        .col-lg-6
+          form#login-form(action='')
+            fieldset
+              legend I'm back
+              
+              p Type your passphrase to login.
+              
+              .form-group
+                label(for='login-passphrase') Passphrase
+                input.form-control#login-passphrase(type='text', name='name', placeholder='John Doe', required, minlength="10")
+              
+              button.btn.btn-primary.form-control(type='submit') Login &raquo;
+
+        .col-lg-6
+          form#signup-form(action='')
+            fieldset
+              legend I'm new here
+              
+              p Type your name and a passphrase and we'll register a new account, just for you!
+              
+              .form-group
+                label(for='signup-name') Your Name (optional)
+                input.form-control#signup-name(type='text', name='name', placeholder='John Doe')
+                  
+              .form-group
+                label(for='signup-passphrase') Passphrase
+                input.form-control#signup-passphrase(type='text', name='name', placeholder='Type a secret phrase.', required, minlength="10")
+                span.help-block.
+                  must be at least 10 characters length &mdash; a verse of a your preferred poem may be a good choice :-)
+    
+              button.btn.btn-success.form-control(type='submit') Create &raquo;
+    
+    
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js')
+    script(src='/js/vendor/require.js', data-main='/js/main.js')
