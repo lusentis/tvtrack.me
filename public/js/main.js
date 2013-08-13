@@ -15,7 +15,27 @@ require(['vendor/reqwest'], function (reqwest) {
     window.localStorage.setItem('_id', id);
     window.localStorage.setItem('_rev', rev);
   };
-
+  
+  var _get_login = function () {
+    if (!window.localStorage.getItem('_id')) {
+      return false;
+    }
+    
+    return {
+      _id: window.localStorage.getItem('_id')
+    , _rev: window.localStorage.getItem('_rev')
+    };
+  };
+  
+  
+  if (_get_login() === false) {
+    $$('#container-login').style.display = 'block';
+  } else {
+    $$('#container-list').style.display = 'block';
+  }
+  
+  
+  // -~- Signup Form -~-
   
   $$('#signup-form').addEventListener('submit', function (e) {
     var data = {
@@ -26,13 +46,13 @@ require(['vendor/reqwest'], function (reqwest) {
     reqwest({
       url: API_ENDPOINT + '/new'
     , method: 'post'
-    , type: 'ajax'
+    , type: 'json'
     , data: data
     })
     
     .then(function (body) {
       console.log('Result: ', body);
-      _login(body.doc.id, body.doc.rev);
+      _login(body.doc._id, body.doc._rev);
     })
     
     .fail(function (err) {
@@ -44,4 +64,5 @@ require(['vendor/reqwest'], function (reqwest) {
     e.stopImmediatePropagation();
     return false;
   });
+  
 });

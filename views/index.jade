@@ -7,7 +7,7 @@ html(lang='en')
 
   body
     
-    .container
+    .container#container-login(style='display:none;')
       div(style='height: 40px; min-height: 40px;')
         
       .page-header
@@ -26,7 +26,7 @@ html(lang='en')
               
               .form-group
                 label(for='login-passphrase') Passphrase
-                input.form-control#login-passphrase(type='text', name='name', placeholder='John Doe', required, minlength="10")
+                input.form-control#login-passphrase(type='text', name='name', placeholder='John Doe', autocomplete='off', required, minlength="10")
               
               button.btn.btn-primary.form-control(type='submit') Login &raquo;
 
@@ -43,13 +43,23 @@ html(lang='en')
                   
               .form-group
                 label(for='signup-passphrase') Passphrase
-                input.form-control#signup-passphrase(type='text', name='name', placeholder='Type a secret phrase.', required, minlength="10")
+                input.form-control#signup-passphrase(type='text', name='name', placeholder='Type a secret phrase.', autocomplete='off', required, minlength="10")
                 span.help-block.
                   must be at least 10 characters length &mdash; a verse of a your preferred poem may be a good choice :-)
     
               button.btn.btn-success.form-control(type='submit') Create &raquo;
+  
+  
+    .container#container-list(style='display:none;')
+      div(style='height: 40px; min-height: 40px;')
+      
+      .page-header
+        h1 Your Shows
     
     
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')
     script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js')
     script(src='/js/vendor/require.js', data-main='/js/main.js')
+      
+      
+      

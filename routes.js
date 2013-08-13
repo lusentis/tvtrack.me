@@ -10,6 +10,7 @@ var db = require('nano')(process.env.DATABASE_URL)
   , coolog = require('coolog')
   , uuid = require('uuid')
   , is = require('is-validation')
+  , crypto = require('crypto')
   ;
   
 var logger = coolog.logger('routes.js');
@@ -20,7 +21,7 @@ exports.index = function (req, res) {
 };
 
 
-exports.create = function (req, res) {
+exports.create = function (req, res, next) {
   var name = req.param('name') || 'John Doe'
     , passphrase = req.param('passphrase')
     , _id = uuid.v4();
@@ -38,9 +39,21 @@ exports.create = function (req, res) {
 
     return;
   }
-
-  res.json({ result: 'ok', error: null });
-
+  
+  passphrase = crypto.createHash('sha512').update(passphrase).digest('base64');
+  
+  console.log('Passphrase is', passphrase);
+  
+  db.insert({
+    name: name
+  , passphrase: passphrase
+  }, _id, function (err, body) {
+    if (err) {
+      return next(err);
+    }
+    
+    res.json({ result: 'ok', error: null, doc: { _id: body.id, _rev: body.rev } });
+  });
 };
 
 
