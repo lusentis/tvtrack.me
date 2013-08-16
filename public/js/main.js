@@ -1,41 +1,33 @@
 /*jshint browser:true, laxcomma:true, indent: 2, eqnull:true, devel:true */
 /*global require */
 
-
-require(['vendor/reqwest'], function (reqwest) {
+require(['vendor/reqwest', 'series'], function (reqwest, series) {
   'use strict';
   
   var $$ = function (id) { return document.querySelector(id); }
     , API_ENDPOINT = '/api/v1';
   
   
-  var _login = function (id, rev) {
-    if (!id || !rev) { throw new Error('TypeError: id, rev must be strings.'); }
-    
-    window.localStorage.setItem('_id', id);
-    window.localStorage.setItem('_rev', rev);
-  };
-  
-  var _get_login = function () {
-    if (!window.localStorage.getItem('_id')) {
-      return false;
-    }
-    
-    return {
-      _id: window.localStorage.getItem('_id')
-    , _rev: window.localStorage.getItem('_rev')
-    };
-  };
-  
+  // -~- Check login & display login or list -~-
   
   if (_get_login() === false) {
     $$('#container-login').style.display = 'block';
   } else {
     $$('#container-list').style.display = 'block';
+    
+    // Get my shows from the API
+    reqwest({
+      url: API_ENDPOINT + '/get'
+    , method: 'get'
+    , type: 'json'
+    , data: { passphrase: _get_login() }
+    })
+    .then(series.load)
+    .fail(_apiFail);
   }
   
   
-  // -~- Signup Form -~-
+  // -~- Signup Form Events -~-
   
   $$('#signup-form').addEventListener('submit', function (e) {
     var data = {
@@ -49,20 +41,38 @@ require(['vendor/reqwest'], function (reqwest) {
     , type: 'json'
     , data: data
     })
-    
-    .then(function (body) {
-      console.log('Result: ', body);
-      _login(body.doc._id, body.doc._rev);
-    })
-    
-    .fail(function (err) {
-      alert('Sorry, the API is not available at the moment. Please try again later.');
-      console.error('API Error', err);
-    });
+    .then(_login)
+    .fail(_apiFail);
     
     e.preventDefault();
     e.stopImmediatePropagation();
     return false;
   });
+  
+  
+  /** Private **/
+  
+  function _apiFail(err) {
+    alert('Sorry, the API is not available at the moment. Please try again later.');
+    console.error('API Error', err);
+  }
+  
+    
+  function _login(body) {
+    var passphrase = body.passphrase;
+    
+    if (!passphrase) { throw new Error('TypeError: passphrase must be a string.'); }
+    
+    window.localStorage.setItem('passphrase', passphrase);
+  }
+  
+  
+  function _get_login() {
+    if (!window.localStorage.getItem('passphrase')) {
+      return false;
+    }
+    
+    return window.localStorage.getItem('passphrase');
+  }
   
 });

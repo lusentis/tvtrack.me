@@ -16,6 +16,23 @@ var db = require('nano')(process.env.DATABASE_URL)
 var logger = coolog.logger('routes.js');
 
 
+function _validatePassphrase(res, passphrase) {
+  var valid_passphrase = is.that(passphrase, 'passphrase')
+  .str()
+  .prop('length')
+    .gt(10)
+    .lt(500).valid();
+
+  if (!valid_passphrase) {
+    return res
+      .status(400)
+      .json({ error: 'Missing or invalid parameter: passphrase.' });
+  }
+  
+  return crypto.createHash('sha512').update(passphrase).digest('base64');
+}
+
+
 exports.index = function (req, res) {
   res.render('index');
 };
@@ -23,80 +40,40 @@ exports.index = function (req, res) {
 
 exports.create = function (req, res, next) {
   var name = req.param('name') || 'John Doe'
-    , passphrase = req.param('passphrase')
-    , _id = uuid.v4();
+    , passphrase = req.param('passphrase');
 
-  var valid_passphrase = is.that(passphrase, 'passphrase')
-    .str()
-    .prop('length')
-      .gt(10)
-      .lt(500).valid();
-
-  if (!valid_passphrase) {
-    res
-      .status(400)
-      .json({ error: 'Missing or invalid parameter: passphrase.' });
-
-    return;
-  }
-  
-  passphrase = crypto.createHash('sha512').update(passphrase).digest('base64');
-  
-  console.log('Passphrase is', passphrase);
+  passphrase = _validatePassphrase(res, passphrase);
   
   db.insert({
     name: name
   , passphrase: passphrase
-  }, _id, function (err, body) {
+  , series: []
+  , created_on: new Date()
+  }, undefined, function (err) {
     if (err) {
       return next(err);
     }
     
-    res.json({ result: 'ok', error: null, doc: { _id: body.id, _rev: body.rev } });
+    res.json({ result: 'ok', error: null, passphrase: passphrase });
   });
 };
 
 
-exports.get = function (req, res) {
-  var url = req.param('url').replace(API_BASE_URL, '');
+exports.get = function (req, res, next) {
+  var passphrase = req.param('passphrase');
+  passphrase = _validatePassphrase(res, passphrase);
   
-  db.get(url, function (err, doc) {
+  db.view('tvtrack', 'by_passphrase', passphrase, function (err, body) {
     if (err) {
-      if (err.statusCode !== 404) {
-        logger.error('Error', err);
-      }
-      
-      res.status(404).send('Not found');
-      return;
+      return next(err);
     }
     
-    res.json(Object.select(doc, ['l', 's', 't', 'd']));
+    var doc = body.rows[0].doc;
+    res.json({ result: 'ok', error: null, doc: Object.select(doc, ['series', 'name', 'created_on']) });
   });
 };
 
 
 exports.save = function (req, res) {
-  var shortUrl = req.param('url').replace(API_BASE_URL, '')
-    , title = req.param('title').substr(0, 50)
-    , passphrase = req.param('passphrase');
-
-  if (passphrase && shortUrl.length > 1) {
-      
-    db.atomic('cuttr', 'url', shortUrl, {
-      action: 'setTitle'
-    , passphrase: passphrase
-    , title: title
-    }, function (err) {
-      if (err) {
-        logger.error('DB Error in post:', err);
-        res.status(500).end('Internal server error');
-        return;
-      }
-      
-      res.type('text').end('ok');
-    });
-    
-  } else {
-    res.status(400).end('Bad passphrase or URL');
-  }
+  
 };
