@@ -29,7 +29,7 @@ function _validatePassphrase(res, passphrase) {
       .json({ error: 'Missing or invalid parameter: passphrase.' });
   }
   
-  return crypto.createHash('sha512').update(passphrase).digest('base64');
+  return crypto.createHash('sha512').update(passphrase).digest('hex');
 }
 
 
@@ -54,7 +54,7 @@ exports.create = function (req, res, next) {
       return next(err);
     }
     
-    res.json({ result: 'ok', error: null, passphrase: passphrase });
+    res.status(201).json({ result: 'ok', error: null });
   });
 };
 
@@ -62,10 +62,16 @@ exports.create = function (req, res, next) {
 exports.get = function (req, res, next) {
   var passphrase = req.param('passphrase');
   passphrase = _validatePassphrase(res, passphrase);
-  
-  db.view('tvtrack', 'by_passphrase', passphrase, function (err, body) {
+    
+  db.view('tvtrack', 'by_passphrase', { key: passphrase, include_docs: true }, function (err, body) {
     if (err) {
       return next(err);
+    }
+    
+    if (body.rows.length !== 1 || body.rows[0].doc === undefined) {
+      return res
+        .status(404)
+        .json({ error: 'Not found' });
     }
     
     var doc = body.rows[0].doc;

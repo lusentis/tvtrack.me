@@ -55,6 +55,15 @@ html(lang='en')
       
       .page-header
         h1 Your Shows
+        
+        ul#shows-container
+        
+        script#show-template(type='text/x-template').
+          <li>
+            <p contenteditable="true">{{=title}}</p>
+            <p contenteditable="true">{{=last_episode}}</p>
+            <p contenteditable="true">{{=last_date}}</p>
+          </li>
     
     
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')

@@ -41,7 +41,7 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
     , type: 'json'
     , data: data
     })
-    .then(_login)
+    .then(function () { _login(data.passphrase); })
     .fail(_apiFail);
     
     e.preventDefault();
@@ -58,17 +58,14 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   }
   
     
-  function _login(body) {
-    var passphrase = body.passphrase;
-    
+  function _login(passphrase) {
     if (!passphrase) { throw new Error('TypeError: passphrase must be a string.'); }
-    
     window.localStorage.setItem('passphrase', passphrase);
   }
   
   
   function _get_login() {
-    if (!window.localStorage.getItem('passphrase')) {
+    if (window.localStorage.getItem('passphrase') === null) {
       return false;
     }
     

@@ -4,20 +4,18 @@
 define('eo', ['vendor/asEvented'], function (asEvented) {
   'use strict';
   
-  var Eo = function (props, name) {
+  var Eo = function (props) {
+    var that = this;
+    
     if ('string' === typeof props) {
       this._fromJSON(props);
     } else {
       this._fromObject(props);
     }
     
-    if (name !== undefined && this.prop('_name') === undefined) {
-      this.prop('_name', name);
-    }
-    
-    this.trigger('create');
+    setTimeout(function () { that.trigger('create'); }, 0);
   };
-  asEvented.call(Eo);
+  asEvented.call(Eo.prototype);
       
   Eo.prototype.prop = function (name, val) {
     if (val === undefined) {
@@ -31,6 +29,10 @@ define('eo', ['vendor/asEvented'], function (asEvented) {
   
   Eo.prototype.toJSON = function () {
     JSON.stringify(this._props);
+  };
+  
+  Eo.prototype.val = function () {
+    return this._props;
   };
   
   Eo.prototype._fromJSON = function (json) {
