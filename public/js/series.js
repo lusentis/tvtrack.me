@@ -9,7 +9,7 @@ define('series', ['eo', 'vendor/t'], function (eo, T) {
     , Eo = eo.Eo
     , _series
     , shows_container = $$('#shows-container')
-    , template = $$('#show-template').innerHTML;
+    , show_template = new T($$('#show-template').innerHTML);
   
   
   module.load = function (body) {
@@ -28,10 +28,9 @@ define('series', ['eo', 'vendor/t'], function (eo, T) {
     
     console.log('Series:', _series);
     
-    var emptyRow = new Eo({ title: 'Type here to add a new TV series', last_episode: 's01e01', last_date: null }, 'empty');
+    var emptyRow = new Eo({ title: 'Type here to add a new TV series', last_episode: 's01e01', last_date: null });
     emptyRow.on('create', function () {
-      var tpl = new T(template);
-      shows_container.innerHTML = shows_container.innerHTML + tpl.render(emptyRow.val());
+      shows_container.innerHTML = shows_container.innerHTML + show_template.render(emptyRow.val());
     });
   };
   
