@@ -27,8 +27,8 @@ define('eo', ['vendor/asEvented'], function (asEvented) {
     }
   };
   
-  Eo.prototype.toJSON = function () {
-    JSON.stringify(this._props);
+  Eo.prototype.toString = function () {
+    return JSON.stringify(this.val());
   };
   
   Eo.prototype.val = function () {
@@ -54,6 +54,7 @@ define('eo', ['vendor/asEvented'], function (asEvented) {
         ret.push(new Baseclass(item));
       }
     });
+    
     return ret;
   };
   

@@ -77,6 +77,11 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   });
   
   
+  series.on('shouldsave', function (series) {
+    console.log('Should save', series); // @TODO
+  });
+  
+  
   /** Private **/
   
   function _apiFail(err) {
