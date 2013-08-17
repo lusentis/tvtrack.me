@@ -43,13 +43,15 @@ define('eo', ['vendor/asEvented'], function (asEvented) {
     this._props = obj;
   };
   
-  Eo.createFromArray = function (arr, map) {
+  Eo.createFromArray = function (arr, map, Baseclass) {
+    Baseclass = Baseclass || Eo;
+    
     var ret = [];
     arr.forEach(function (item) {
       if ('function' === typeof map) {
-        ret.push(map(new Eo(item)));
+        ret.push(map(new Baseclass(item)));
       } else {
-        ret.push(new Eo(item));
+        ret.push(new Baseclass(item));
       }
     });
     return ret;

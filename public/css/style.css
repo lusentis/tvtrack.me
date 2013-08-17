@@ -26,3 +26,10 @@ footer {
   min-height: 30px;
   bottom: 0px;
 }
+[contenteditable="true"] {
+  border-bottom: 1px dotted #666;
+  display: inline-block;
+  height: 1.5em;
+  min-width: 30px;
+  padding: 1px;
+}

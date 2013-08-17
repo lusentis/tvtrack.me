@@ -62,7 +62,40 @@ exports.create = function (req, res, next) {
 exports.get = function (req, res, next) {
   var passphrase = req.param('passphrase');
   passphrase = _validatePassphrase(res, passphrase);
-    
+  
+  _getUserByPassphrase(res, passphrase, function (doc) {
+    res.json({ result: 'ok', error: null, doc: Object.select(doc, ['series', 'name', 'created_on']) });
+  });
+};
+
+
+exports.save = function (req, res) {
+  var passphrase = req.param('passphrase')
+    , series = req.param('series');
+  
+  passphrase = _validatePassphrase(res, passphrase);
+  series = JSON.parse('series');
+  
+  _getUserByPassphrase(res, passphrase, function (doc) {
+    doc.series = series;
+    db.insert(doc, doc._id, function (err) {
+      if (err) {
+        console.log('Error while updating user document:', err);
+        
+        return res
+          .status(500)
+          .json({ error: 'Server error.' });
+      }
+      
+      res.status(204).end('');
+    });
+  });
+};
+
+
+/** Helpers **/
+
+function _getUserByPassphrase(res, passphrase, callback) {
   db.view('tvtrack', 'by_passphrase', { key: passphrase, include_docs: true }, function (err, body) {
     if (err) {
       return next(err);
@@ -75,11 +108,6 @@ exports.get = function (req, res, next) {
     }
     
     var doc = body.rows[0].doc;
-    res.json({ result: 'ok', error: null, doc: Object.select(doc, ['series', 'name', 'created_on']) });
+    callback(doc);
   });
-};
-
-
-exports.save = function (req, res) {
-  
-};
+}
