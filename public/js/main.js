@@ -12,6 +12,7 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   
   if (_get_login() === false) {
     $$('#container-login').style.display = 'block';
+    $$('#logout').classList.add('hide');
   } else {
     $$('#container-list').style.display = 'block';
     
@@ -27,7 +28,15 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   }
   
   
-  // -~- Signup Form Events -~-
+  // -~- Events -~-
+  
+  $$('#logout').addEventListener('click', function (e) {
+    window.localStorage.removeItem('passphrase');
+    window.location.reload();
+    e.preventDefault();
+    return false;
+  });
+  
   
   $$('#signup-form').addEventListener('submit', function (e) {
     var data = {
@@ -50,6 +59,24 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   });
   
   
+  $$('#login-form').addEventListener('submit', function (e) {
+    var passphrase = $$('#login-passphrase').value;
+      
+    reqwest({
+      url: API_ENDPOINT + '/get'
+    , method: 'get'
+    , type: 'json'
+    , data: { passphrase: passphrase }
+    })
+    .then(function () { _login(passphrase); })
+    .fail(_apiFail);
+    
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    return false;
+  });
+  
+  
   /** Private **/
   
   function _apiFail(err) {
@@ -61,6 +88,7 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   function _login(passphrase) {
     if (!passphrase) { throw new Error('TypeError: passphrase must be a string.'); }
     window.localStorage.setItem('passphrase', passphrase);
+    window.location.reload();
   }
   
   

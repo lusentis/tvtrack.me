@@ -3,13 +3,30 @@ html(lang='en')
   head
     title TVTrack.me
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css')
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Shanti')
+    link(rel='stylesheet', href='css/style.css')
 
   body
     
-    .container#container-login(style='display:none;')
-      div(style='height: 40px; min-height: 40px;')
-        
+  .container
+  
+    nav.navbar(role='navigation')
+      .container
+        .navbar-header
+          a.navbar-brand(href='/') TVTrack.me
+          p.navbar-text &mdash;&nbsp; Hey, did I already see this episode?
+          
+        .navbar-collapse.collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              button.btn.btn-default.navbar-btn#logout(type='button', onclick='return false;')
+                | Logout
+            
+      
+    
+    #container-login(style='display:none;')      
       .page-header
         h1 Your TV-Show Tracker
       
@@ -50,24 +67,36 @@ html(lang='en')
               button.btn.btn-success.form-control(type='submit') Create &raquo;
   
   
-    .container#container-list(style='display:none;')
-      div(style='height: 40px; min-height: 40px;')
-      
+    #container-list(style='display:none;')      
       .page-header
         h1 Your Shows
+          
         
-        ul#shows-container
-        
-        script#show-template(type='text/x-template').
-          <li>
-            <p contenteditable="true">{{=title}}</p>
-            <p contenteditable="true">{{=last_episode}}</p>
-            <p contenteditable="true">{{=last_date}}</p>
-          </li>
+      table.table.table-striped.table-hover
+        thead
+          tr
+            th.col-lg-4 Title
+            th.col-lg-4 Last Watched Episode
+            th.col-lg-4 Last Watched Date
+        tbody#shows-container
+      
+      script#show-template(type='text/x-template').
+        <tr>
+          <td class="col-lg-4"><span contenteditable="true">{{=title}}</span></td>
+          <td class="col-lg-4"><span contenteditable="true">{{=last_episode}}</span></td>
+          <td class="col-lg-4"><span contenteditable="true">{{=last_date}}</span></td>
+        </tr>
+    
+    
+    footer.row
+      p.col-lg-12.
+        &copy; 2013 <a href="http://www.plasticpanda.com/">Plastic Panda</a> &middot;
+        <span>We don't track, anything</span> &middot;
+        <a href="https://github.com/lusentis/tvtrack.me">Source Code</a>
     
     
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js')
     script(src='/js/vendor/require.js', data-main='/js/main.js')
       
       

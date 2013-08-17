@@ -28,7 +28,7 @@ define('series', ['eo', 'vendor/t'], function (eo, T) {
     
     console.log('Series:', _series);
     
-    var emptyRow = new Eo({ title: 'Type here to add a new TV series', last_episode: 's01e01', last_date: null });
+    var emptyRow = new Eo({ title: 'Type here to add a new TV show', last_episode: 's01e01', last_date: null });
     emptyRow.on('create', function () {
       shows_container.innerHTML = shows_container.innerHTML + show_template.render(emptyRow.val());
     });

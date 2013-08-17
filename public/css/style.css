@@ -1,0 +1,28 @@
+body {
+  font-family: 'Shanti', sans-serif;
+  padding: 30px;
+}
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span {
+  font-family: 'Shanti', sans-serif;
+}
+.navbar {
+  margin-bottom: 30px;
+}
+.navbar-text {
+  color: #aaa;
+}
+footer {
+  position: absolute;
+  height: 30px;
+  min-height: 30px;
+  bottom: 0px;
+}
