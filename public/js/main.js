@@ -15,16 +15,7 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
     $$('#logout').classList.add('hide');
   } else {
     $$('#container-list').style.display = 'block';
-    
-    // Get my shows from the API
-    reqwest({
-      url: API_ENDPOINT + '/get'
-    , method: 'get'
-    , type: 'json'
-    , data: { passphrase: _get_login() }
-    })
-    .then(series.load)
-    .fail(_apiFail);
+    _loadSeries();
   }
   
   
@@ -95,6 +86,21 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   
   
   /** Private **/
+  
+  function _loadSeries() {
+     $$('#shows-container').innerHTML = '';
+    
+    // Get my shows from the API
+    reqwest({
+      url: API_ENDPOINT + '/get'
+    , method: 'get'
+    , type: 'json'
+    , data: { passphrase: _get_login() }
+    })
+    .then(series.load)
+    .fail(_apiFail);
+  }
+  
   
   function _apiFail(err) {
     alert('Sorry, the API is not available at the moment. Please try again later.');

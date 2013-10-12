@@ -34,8 +34,12 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
       // Bump season/episode button
       Array.prototype.forEach.call(wrapper.querySelectorAll('[data-action="bump-episode"]'), function (el) {
         el.addEventListener('click', function (e) {
-          // that.prop(e.target.getAttribute('data-id'), e.target.innerHTML);
-          alert('x' + that.prop('last_episode'));
+          var cur_episode = that.prop('last_episode').split('e')
+            , season = cur_episode[0]
+            , episode = parseInt(cur_episode[1]) + 1
+            , next_episode = season + 'e' + ((episode < 10) ? '0' : '') + episode;
+          
+          that.prop('last_episode', next_episode);
         });
       });
       
@@ -64,9 +68,12 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
       
       show.on('change', function () {
         console.log('Change handler: -> _triggerSave');
-        
         show.prop('placeholder', false, true /*don't trigger another change event*/);
         _triggerSave(series);
+      });
+      
+      show.on('change:last_episode', function () {
+        shows_container.querySelector('[data-show-title="' + show.prop('title') + '"] [data-id="last_episode"]').innerHTML = show.prop('last_episode');
       });
       
       return show;
