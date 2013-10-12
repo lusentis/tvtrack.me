@@ -78,7 +78,19 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   
   
   series.on('shouldsave', function (series) {
-    console.log('Should save', series); // @TODO
+    console.log('Saving', series);
+    
+    // Get my shows from the API
+    reqwest({
+      url: API_ENDPOINT + '/save'
+    , method: 'put'
+    , type: 'json'
+    , data: { passphrase: _get_login(), series: series }
+    })
+    .then(function () {
+      console.log('Save succeded');
+    })
+    .fail(_apiFail);
   });
   
   

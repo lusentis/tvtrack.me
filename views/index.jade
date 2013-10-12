@@ -1,34 +1,36 @@
 !!!
 html(lang='en')
   head
-    title TVTrack.me
+    title TV Track &mdash; Hey, did I already see this episode?
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootswatch/3.0.0/cosmo/bootstrap.min.css')
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Shanti')
+    meta(name='viewport', content='width=960, initial-scale=1')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-title', content='TV Track')      
     link(rel='stylesheet', href='css/style.css')
 
   body
     
   .container
-  
-    nav.navbar(role='navigation')
+    
+    nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
       .container
         .navbar-header
-          a.navbar-brand(href='/') TVTrack.me
-          p.navbar-text &mdash;&nbsp; Hey, did I already see this episode?
+          a.navbar-brand(href='/') TV&nbsp;Track
           
-        .navbar-collapse.collapse
+        .navbar-collapse.collapse#navbar-main
           ul.nav.navbar-nav.navbar-right
             li
-              button.btn.btn-default.navbar-btn#logout(type='button', onclick='return false;')
+              a#logout(type='button', onclick='return false;')
                 | Logout
             
       
     
     #container-login(style='display:none;')      
       .page-header
-        h1 Your TV-Show Tracker
+        h3 Your TV-Show Tracker
       
       p.lead.
         TVTrack.me is a <a href="#why">simple</a> tracker for the TV Shows you are watching.
@@ -69,8 +71,7 @@ html(lang='en')
   
     #container-list(style='display:none;')      
       .page-header
-        h1 Your Shows
-          
+        h3 Your Shows
         
       table.table.table-striped.table-hover
         thead
@@ -96,7 +97,7 @@ html(lang='en')
     
     
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js')
     script(src='/js/vendor/require.js', data-main='/js/main.js')
       
       

@@ -74,7 +74,7 @@ exports.save = function (req, res) {
     , series = req.param('series');
   
   passphrase = _validatePassphrase(res, passphrase);
-  series = JSON.parse('series');
+  series = JSON.parse(series);
   
   _getUserByPassphrase(res, passphrase, function (doc) {
     doc.series = series;
@@ -87,7 +87,7 @@ exports.save = function (req, res) {
           .json({ error: 'Server error.' });
       }
       
-      res.status(204).end('');
+      res.status(200).end('OK');
     });
   });
 };

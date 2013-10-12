@@ -46,7 +46,7 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
       return;
     }
     
-    docSeries.push({ title: 'Type here to add a new TV show', last_episode: 's01e01', last_date: null });
+    docSeries.push({ title: 'Type here to add a new TV show', last_episode: 's01e01', last_date: null, placeholder: true });
     
     series = Eo.createFromArray(docSeries, function _bindEvents(show) {
       show.on('create', function () {
@@ -55,6 +55,8 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
       
       show.on('change', function () {
         console.log('Change handler: -> _triggerSave');
+        
+        show.prop('placeholder', false, true /*don't trigger another change event*/);
         _triggerSave(series);
       });
       
@@ -68,8 +70,14 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
   // -$- Private -$-
   
   function _triggerSave(series) {
-    series = JSON.stringify(series.map(function (item) { return item.val(); }));
-    module.trigger('shouldsave', series);
+    var series_wo_placeholder = [];
+    series.forEach(function _filterAndUnpack(item) {
+      if (!item.prop('placeholder')) {
+        series_wo_placeholder.push(item.val());
+      }
+    });
+
+    module.trigger('shouldsave', JSON.stringify(series_wo_placeholder));
   }
   
   asEvented.call(module);

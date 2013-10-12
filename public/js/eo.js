@@ -17,13 +17,16 @@ define('eo', ['vendor/asEvented'], function (asEvented) {
   };
   asEvented.call(Eo.prototype);
       
-  Eo.prototype.prop = function (name, val) {
+  Eo.prototype.prop = function (name, val, dontTriggerChange) {
     if (val === undefined) {
       return this._props[name];
     } else {
       this._props[name] = val;
-      this.trigger('change:' + name, [name, val]);
-      this.trigger('change', [name, val]);
+      
+      if (dontTriggerChange !== true) {
+        this.trigger('change:' + name, [name, val]);
+        this.trigger('change', [name, val]);
+      }
     }
   };
   

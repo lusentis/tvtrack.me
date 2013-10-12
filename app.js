@@ -31,7 +31,7 @@ app.configure('development', function () {
 app.get('/', routes.index);
 app.post('/api/v1/new', routes.create); // name=""
 app.get('/api/v1/get', routes.get);     // passphrase=""
-app.put('/api/v1/save', routes.save);   // passphrase=""&routes=""
+app.put('/api/v1/save', routes.save);   // passphrase=""&series=JSON
 
 
 http.createServer(app).listen(app.get('port'), function () {
