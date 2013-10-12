@@ -24,9 +24,18 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
         
       wrapper.innerHTML = show_template.render(this.val());
       
+      // Blur events
       Array.prototype.forEach.call(wrapper.querySelectorAll('[contenteditable="true"]'), function (el) {
         el.addEventListener('blur', function (e) {
           that.prop(e.target.getAttribute('data-id'), e.target.innerHTML);
+        });
+      });
+      
+      // Bump season/episode button
+      Array.prototype.forEach.call(wrapper.querySelectorAll('[data-action="bump-episode"]'), function (el) {
+        el.addEventListener('click', function (e) {
+          // that.prop(e.target.getAttribute('data-id'), e.target.innerHTML);
+          alert('x' + that.prop('last_episode'));
         });
       });
       
@@ -46,7 +55,7 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
       return;
     }
     
-    docSeries.push({ title: 'Type here to add a new TV show', last_episode: 's01e01', last_date: null, placeholder: true });
+    docSeries.push({ title: 'Type here to add a new TV show', last_episode: 's01e01', comment: null, placeholder: true });
     
     series = Eo.createFromArray(docSeries, function _bindEvents(show) {
       show.on('create', function () {

@@ -78,15 +78,28 @@ html(lang='en')
           tr
             th.col-lg-4 Title
             th.col-lg-4 Last Watched Episode
-            th.col-lg-4 Last Watched Date
+            th.col-lg-4 Comment
         tbody#shows-container
       
-      script#show-template(type='text/x-template').
-        <tr>
-          <td class="col-lg-4"><p contenteditable="true", data-id="title">{{=title}}</p></td>
-          <td class="col-lg-4"><p contenteditable="true", data-id="last_episode">{{=last_episode}}</p></td>
-          <td class="col-lg-4"><p contenteditable="true", data-id="last_date">{{=last_date}}</p></td>
-        </tr>
+      script#show-template(type='text/html')
+        tr(data-show-title="{{=title}}")
+          td.col-lg-4
+            p(contenteditable="true", data-id="title") {{=title}}
+            
+          td.col-lg-4
+            span.lastepisode-container
+              p(contenteditable="true", data-id="last_episode") {{=last_episode}}
+              
+            span
+              &nbsp;&nbsp;
+              button.btn.btn-xs.btn-primary(data-action="bump-episode")
+                i.glyphicon.glyphicon-forward
+              &nbsp;
+              button.btn.btn-xs(data-action="bump-season")
+                i.glyphicon.glyphicon-fast-forward
+              
+          td.col-lg-4
+            p(contenteditable="true", data-id="comment") {{=comment}}
     
     
     footer.row
