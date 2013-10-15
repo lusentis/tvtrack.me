@@ -103,7 +103,7 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   
   
   function _apiFail(err) {
-    alert('Sorry, the API is not available at the moment. Please try again later.');
+    alert('Please, try again later.');
     console.error('API Error', err);
   }
   

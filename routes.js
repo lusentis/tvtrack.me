@@ -87,7 +87,7 @@ exports.save = function (req, res) {
           .json({ error: 'Server error.' });
       }
       
-      res.status(200).end('OK');
+      res.status(201).end('"OK"');
     });
   });
 };
