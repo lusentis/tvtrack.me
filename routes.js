@@ -64,7 +64,7 @@ exports.get = function (req, res, next) {
   passphrase = _validatePassphrase(res, passphrase);
   
   _getUserByPassphrase(res, passphrase, function (doc) {
-    res.json({ result: 'ok', error: null, doc: Object.select(doc, ['series', 'name', 'created_on']) });
+    res.json({ result: 'ok', error: null, doc: Object.select(doc, ['series', 'name', 'created_on', 'updated_on']) });
   });
 };
 
@@ -78,6 +78,7 @@ exports.save = function (req, res) {
   
   _getUserByPassphrase(res, passphrase, function (doc) {
     doc.series = series;
+    doc.updated_on = new Date();
     db.insert(doc, doc._id, function (err) {
       if (err) {
         console.log('Error while updating user document:', err);

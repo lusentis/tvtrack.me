@@ -36,7 +36,7 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
         el.addEventListener('click', function (e) {
           var cur_episode = that.prop('last_episode').split('e')
             , season = cur_episode[0]
-            , episode = parseInt(cur_episode[1]) + 1
+            , episode = parseInt(cur_episode[1], 10) + 1
             , next_episode = season + 'e' + ((episode < 10) ? '0' : '') + episode;
           
           that.prop('last_episode', next_episode);
@@ -60,6 +60,8 @@ define('series', ['eo', 'vendor/t', 'vendor/asEvented', 'vendor/ancestry'], func
     }
     
     docSeries.push({ title: 'Type here to add a new TV show', last_episode: 's01e01', comment: null, placeholder: true });
+    
+    $$('#lastSaved').setAttribute('last-save', body.doc.updated_on);
     
     series = Eo.createFromArray(docSeries, function _bindEvents(show) {
       show.on('create', function () {
