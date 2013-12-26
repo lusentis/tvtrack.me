@@ -5,7 +5,10 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   'use strict';
   
   var $$ = function (id) { return document.querySelector(id); }
-    , API_ENDPOINT = '/api/v1';
+    , API_ENDPOINT = '/api/v1'
+    , saveTimerPause = false
+    , saveTimer
+    ;
   
   
   // -~- Check login & display login or list -~-
@@ -71,6 +74,9 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
   series.on('shouldsave', function (series) {
     console.log('Saving', series);
     
+    saveTimerPause = true;
+    $$('#lastSaved').innerHTML = 'saving right now...';
+    
     // Get my shows from the API
     reqwest({
       url: API_ENDPOINT + '/save'
@@ -80,23 +86,31 @@ require(['vendor/reqwest', 'series'], function (reqwest, series) {
     })
     .then(function () {
       console.log('Save succeded');
+      saveTimerPause = false;
+      $$('#lastSaved').innerHTML = 'last saved ' + moment().fromNow();
+      $$('#lastSaved').setAttribute('last-save', new Date().toISOString());
     })
     .fail(_apiFail);
   });
+  
+  saveTimer = setInterval(function () {
+    if (saveTimerPause) return;    
+    $$('#lastSaved').innerHTML = 'last saved ' + moment($$('#lastSaved').getAttribute('last-save')).fromNow();
+  }, 2000);
   
   
   /** Private **/
   
   function _loadSeries() {
-     $$('#shows-container').innerHTML = '';
+    $$('#shows-container').innerHTML = '';
     
     // Get my shows from the API
     reqwest({
-      url: API_ENDPOINT + '/get'
-    , method: 'get'
-    , type: 'json'
-    , data: { passphrase: _get_login() }
-    })
+        url: API_ENDPOINT + '/get'
+      , method: 'get'
+      , type: 'json'
+      , data: { passphrase: _get_login() }
+      })
     .then(series.load)
     .fail(_apiFail);
   }
